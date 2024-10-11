@@ -114,31 +114,30 @@
         <div id="result"></div>
         <div id="calculation-process"></div>
     </div>
-    <div id="debug-logs"></div>
 
     <script>
         function strikeOffCommonLetters(name1Array, name2Array) {
             let name1Steps = '';
             let name2Steps = '';
 
+            // Create copies to maintain original names for display
+            let name1Display = [...name1Array];
+            let name2Display = [...name2Array];
+
+            // Strike off common letters
             for (let i = 0; i < name1Array.length; i++) {
                 const letter = name1Array[i];
                 if (name2Array.includes(letter)) {
                     // Strike off letters from both names
-                    name1Steps += `<span class="strike-off">${letter}</span> `;
-                    name2Steps += `<span class="strike-off">${letter}</span> `;
-                    name2Array[name2Array.indexOf(letter)] = '-'; // Remove that letter from name2
-                } else {
-                    name1Steps += `${letter} `;
+                    name1Display[i] = `<span class="strike-off">${letter}</span>`;
+                    name2Display[name2Array.indexOf(letter)] = `<span class="strike-off">${letter}</span>`;
+                    name2Array[name2Array.indexOf(letter)] = '-'; // Mark as used in name2
                 }
             }
 
-            // Show remaining letters of name2 that are not struck off
-            for (let j = 0; j < name2Array.length; j++) {
-                if (name2Array[j] !== '-') {
-                    name2Steps += `${name2Array[j]} `;
-                }
-            }
+            // Construct the final output strings
+            name1Steps = name1Display.join(' ');
+            name2Steps = name2Display.join(' ');
 
             return [name1Steps, name2Steps];
         }
