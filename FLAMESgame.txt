@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FLAMES Game</title>
+    <style>
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background-color: #ffeb3b;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .game-container {
+            background-color: #ff5722;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
+            width: 350px;
+            text-align: center;
+            color: #fff;
+        }
+
+        h1 {
+            font-size: 30px;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        input[type="text"] {
+            width: 80%;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border: none;
+            font-size: 16px;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.8);
+        }
+
+        button {
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 18px;
+            width: 80%;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #388e3c;
+        }
+
+        #result {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #ffffff;
+            color: #333;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 10px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="game-container">
+        <h1>FLAMES Game</h1>
+        <input type="text" id="name1" placeholder="Enter Your Name">
+        <input type="text" id="name2" placeholder="Enter Partner's Name">
+        <button onclick="calculateFlames()">Find Out!</button>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        function calculateFlames() {
+            const name1 = document.getElementById('name1').value.toLowerCase().replace(/\s+/g, '');
+            const name2 = document.getElementById('name2').value.toLowerCase().replace(/\s+/g, '');
+
+            if (!name1 || !name2) {
+                alert('Please enter both names!');
+                return;
+            }
+
+            const flamesResult = ['Friends', 'Love', 'Affection', 'Marriage', 'Enemy', 'Siblings'];
+            let count = name1.length + name2.length;
+
+            for (let char of name1) {
+                if (name2.includes(char)) {
+                    name1.replace(char, '');
+                    name2.replace(char, '');
+                    count -= 2;
+                }
+            }
+
+            const index = (count % flamesResult.length) - 1;
+            const relationship = index >= 0 ? flamesResult[index] : flamesResult[flamesResult.length - 1];
+
+            document.getElementById('result').innerText = `Relationship: ${relationship}`;
+        }
+    </script>
+
+</body>
+</html>

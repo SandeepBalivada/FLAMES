@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FLAMES Game</title>
+    <style>
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background-color: #ffeb3b;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .game-container {
+            background-color: #ff5722;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
+            width: 350px;
+            text-align: center;
+            color: #fff;
+        }
+
+        h1 {
+            font-size: 30px;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        input[type="text"] {
+            width: 80%;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border: none;
+            font-size: 16px;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.8);
+        }
+
+        button {
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 18px;
+            width: 80%;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #388e3c;
+        }
+
+        #result, #calculation-process {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #ffffff;
+            color: #333;
+            font-size: 16px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        #calculation-process {
+            font-size: 16px;
+            text-align: center;
+            color: #555;
+        }
+
+        .names-container {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 10px;
+        }
+
+        .name-box {
+            display: inline-block;
+            text-align: left;
+        }
+
+        .strike-off {
+            text-decoration: line-through;
+            color: red;
+        }
+
+        .remaining-letters {
+            margin-top: 10px;
+        }
+
+        .flames-highlight {
+            font-weight: bold;
+            font-size: 24px;
+            color: #ff5722;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="game-container">
+        <h1>FLAMES Game</h1>
+        <input type="text" id="name1" placeholder="Enter Your Name">
+        <input type="text" id="name2" placeholder="Enter Partner's Name">
+        <button onclick="calculateFlames()">Find Out!</button>
+        <div id="result"></div>
+        <div id="calculation-process"></div>
+    </div>
+
+    <script>
+        function strikeOffCommonLetters(name1Array, name2Array) {
+            let name1Steps = '';
+            let name2Steps = '';
+
+            for (let i = 0; i < name1Array.length; i++) {
+                const letter = name1Array[i];
+                if (name2Array.includes(letter)) {
+                    // Strike off letters from both names
+                    name1Steps += `<span class="strike-off">${letter}</span> `;
+                    name2Steps += `<span class="strike-off">${letter}</span> `;
+                    name2Array[name2Array.indexOf(letter)] = '-'; // Remove that letter from name2
+                } else {
+                    name1Steps += `${letter} `;
+                }
+            }
+
+            // Show remaining letters of name2 that are not struck off
+            for (let j = 0; j < name2Array.length; j++) {
+                if (name2Array[j] !== '-') {
+                    name2Steps += `${name2Array[j]} `;
+                }
+            }
+
+            return [name1Steps, name2Steps];
+        }
+
+        function calculateFlames() {
+            let name1 = document.getElementById('name1').value.toLowerCase().replace(/\s+/g, '');
+            let name2 = document.getElementById('name2').value.toLowerCase().replace(/\s+/g, '');
+
+            const flamesResult = ['Friends', 'Love', 'Affection', 'Marriage', 'Enemy', 'Siblings'];
+
+            if (!name1 || !name2) {
+                alert('Please enter both names!');
+                return;
+            }
+
+            let name1Array = name1.split('');
+            let name2Array = name2.split('');
+
+            // Display striking off process
+            const processElement = document.getElementById('calculation-process');
+            processElement.innerHTML = `<p>Striking off common letters:</p>`;
+            
+            let [name1Steps, name2Steps] = strikeOffCommonLetters(name1Array, name2Array);
+
+            processElement.innerHTML += `
+                <div class="names-container">
+                    <div class="name-box">
+                        <p>Your Name:</p> ${name1Steps}
+                    </div>
+                    <div class="name-box">
+                        <p>Partner's Name:</p> ${name2Steps}
+                    </div>
+                </div>
+            `;
+
+            // Count the remaining letters after striking off
+            let remainingLetters = name1Array.filter(letter => !letter.includes('-')).concat(
+                name2Array.filter(letter => letter !== '-')
+            );
+
+            let remainingCount = remainingLetters.length;
+
+            // Display remaining letters count
+            processElement.innerHTML += `<p>Remaining letters count: ${remainingCount}</p>`;
+            processElement.innerHTML += `<p>Counting FLAMES:</p>`;
+
+            // Highlight only the answer letter in FLAMES
+            let flamesCounting = visualizeFlamesCounting(remainingCount);
+            processElement.innerHTML += `<div class="flames-count">${flamesCounting}</div>`;
+
+            // Get relationship
+            const index = (remainingCount % flamesResult.length) - 1;
+            const relationship = index >= 0 ? flamesResult[index] : flamesResult[flamesResult.length - 1];
+
+            document.getElementById('result').innerText = `Relationship: ${relationship}`;
+        }
+
+        function visualizeFlamesCounting(remainingCount) {
+            const flames = 'FLAMES';
+            let flamesHTML = '';
+
+            // Calculate the index based on the remainingCount
+            let index = (remainingCount % flames.length) - 1;
+            if (index === -1) {
+                // If index is -1, it means we should highlight the last letter 'S'
+                index = flames.length - 1;
+            }
+
+            for (let i = 0; i < flames.length; i++) {
+                if (i === index) {
+                    flamesHTML += `<span class="flames-highlight">${flames[i]}</span> `;
+                } else {
+                    flamesHTML += `${flames[i]} `;
+                }
+            }
+
+            return flamesHTML;
+        }
+    </script>
+
+</body>
+</html>
