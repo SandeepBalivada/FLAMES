@@ -56,6 +56,28 @@
             cursor: pointer;
             transition: background-color 0.3s ease;
         }
+        buttonIndian {
+            background-color: #534caf;
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 18px;
+            width: 80%;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        buttonWestern {
+            background-color: #534caf;
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 18px;
+            width: 80%;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
 
         button:hover {
             background-color: #388e3c;
@@ -110,9 +132,13 @@
         <h1>FLAMES Game</h1>
         <input type="text" id="name1" placeholder="Enter Your Name">
         <input type="text" id="name2" placeholder="Enter Partner's Name">
-        <button onclick="calculateFlames()">Find Out!</button>
+        <h2>Find Out!</h2>
+        <!-- <button onclick="">Find Out!</button> -->
+        <buttonIndian onclick="calculateFlames(1)">Indian Style</buttonIndian>
+        <buttonWestern onclick="calculateFlames(2)">Global Style</buttonWestern>
         <div id="result"></div>
         <div id="calculation-process"></div>
+        <div id="debug-logs"></div>
     </div>
 
     <script>
@@ -132,6 +158,7 @@
                     name1Display[i] = `<span class="strike-off">${letter}</span>`;
                     name2Display[name2Array.indexOf(letter)] = `<span class="strike-off">${letter}</span>`;
                     name2Array[name2Array.indexOf(letter)] = '-'; // Mark as used in name2
+                    name1Array[name1Array.indexOf(letter)] = '-'; // Mark as used in name1
                 }
             }
 
@@ -142,7 +169,7 @@
             return [name1Steps, name2Steps];
         }
 
-        function calculateFlames() {
+        function calculateFlames(type) {
             let name1 = document.getElementById('name1').value.toLowerCase().replace(/\s+/g, '');
             let name2 = document.getElementById('name2').value.toLowerCase().replace(/\s+/g, '');
 
@@ -155,6 +182,10 @@
 
             let name1Array = name1.split('');
             let name2Array = name2.split('');
+
+            // const debugLog = document.getElementById('debug-logs');
+            // debugLog.innerHTML = `<p>Debug Log: </p>${name2Array}`;
+            
 
             // Display striking off process
             const processElement = document.getElementById('calculation-process');
@@ -173,26 +204,82 @@
                 </div>
             `;
 
-            // Count the remaining letters after striking off
-            let remainingLetters = name1Array.filter(letter => !letter.includes('-')).concat(
+            let remainingLetters = 
+            name1Array.filter(letter => letter !== '-').concat(
                 name2Array.filter(letter => letter !== '-')
             );
+            
+
+            
 
             let remainingCount = remainingLetters.length;
 
             // Display remaining letters count
+            processElement.innerHTML += `<p>Remaining letters: ${remainingLetters}</p>`;
             processElement.innerHTML += `<p>Remaining letters count: ${remainingCount}</p>`;
             processElement.innerHTML += `<p>Counting FLAMES:</p>`;
 
             // Highlight only the answer letter in FLAMES
-            let flamesCounting = visualizeFlamesCounting(remainingCount);
-            processElement.innerHTML += `<div class="flames-count">${flamesCounting}</div>`;
 
-            // Get relationship
-            const index = (remainingCount % flamesResult.length) - 1;
-            const relationship = index >= 0 ? flamesResult[index] : flamesResult[flamesResult.length - 1];
+            if (type == 1) {
+                const word = 'FLAMES';
+                visualizeFlamesCountingIndian(remainingCount, word);
+                const debugLog = document.getElementById('debug-logs');
+                debugLog.innerHTML = `<p>Style: </br> </br> Indian </p>`;                
+                }
+            else{
+                let flamesCounting = visualizeFlamesCounting(remainingCount);
+                const debugLog = document.getElementById('debug-logs');
+                debugLog.innerHTML = `<p>Style: </br> </br> Global </p>`;
+                processElement.innerHTML += `<div class="flames-count">${flamesCounting}</div>`;
+            }
+            
+            
 
-            document.getElementById('result').innerText = `Relationship: ${relationship}`;
+            getRelationship(remainingCount, flamesResult,type);
+
+
+        }
+
+        function visualizeFlamesCountingIndian(remainingCount, flames) {
+            // flames = 'FLAMES';
+            let flamesHTML = '';
+            let newFlames = '';
+
+            // Calculate the index based on the remainingCount
+            let index = (remainingCount % flames.length) - 1;
+            if (index === -1) {
+                // If index is -1, it means we should highlight the last letter
+                index = flames.length - 1;
+            }
+
+            for (let i = 0; i < flames.length; i++) {
+                if (i === index) {
+                    flamesHTML += `<span class="strike-off">${flames[i]}</span>`;
+                    
+                } else {
+                    flamesHTML += `${flames[i]} `;
+                    newFlames += `${flames[i]}`;
+                }
+            }
+            const processElement = document.getElementById('calculation-process');
+
+            processElement.innerHTML += `<div class="flames-count">${flamesHTML}</div>`;
+
+            // const debugLog = document.getElementById('debug-logs');
+            // debugLog.innerHTML += `<p>New flames: ${newFlames}</p>`;
+            // newFlamesLength = newFlames.length;
+            // debugLog.innerHTML += `<p>New flames length: ${newFlamesLength}</p>`;
+
+            if(newFlames.length != 1){
+                visualizeFlamesCountingIndian(remainingCount,newFlames);
+            }
+            else{
+                processElement.innerHTML += `<span class="flames-highlight">${newFlames}</span>`;
+                // const relationship = index >= 0 ? flamesResult[index] : flamesResult[flamesResult.length - 1];
+                // document.getElementById('result').innerText = `Relationship: ${relationship}`;
+                document.getElementById('result').innerText = `Relationship: FAMILY`;
+            }            
         }
 
         function visualizeFlamesCounting(remainingCount) {
@@ -215,6 +302,26 @@
             }
 
             return flamesHTML;
+        }
+
+
+        function getRelationship(remainingCount, flamesResult,type) {
+            // Get relationship
+
+            if(type == 1){
+
+
+            }
+            else{
+                const index = (remainingCount % flamesResult.length) - 1;
+            const relationship = index >= 0 ? flamesResult[index] : flamesResult[flamesResult.length - 1];
+
+            document.getElementById('result').innerText = `Relationship: ${relationship}`;
+
+
+            }
+
+           
         }
     </script>
 
