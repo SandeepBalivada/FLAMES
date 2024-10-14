@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FLAMES Game</title>
+    <title>FLAMES</title>
     <style>
         body {
             font-family: 'Comic Sans MS', cursive, sans-serif;
@@ -127,9 +127,9 @@
     </style>
 </head>
 <body>
-
+    <div><br/><br/></div>
     <div class="game-container">
-        <h1>FLAMES Game</h1>
+        <h1>FLAMES</h1>
         <input type="text" id="name1" placeholder="Enter Your Name">
         <input type="text" id="name2" placeholder="Enter Partner's Name">
         <h2>Find Out!</h2>
@@ -278,7 +278,9 @@
                 processElement.innerHTML += `<span class="flames-highlight">${newFlames}</span>`;
                 // const relationship = index >= 0 ? flamesResult[index] : flamesResult[flamesResult.length - 1];
                 // document.getElementById('result').innerText = `Relationship: ${relationship}`;
-                document.getElementById('result').innerText = `Relationship: FAMILY`;
+                const flamesResult = ['Friends', 'Love', 'Affection', 'Marriage', 'Enemy', 'Siblings'];
+                const relationship = flamesResult.find(name => name.startsWith(newFlames));
+                document.getElementById('result').innerText = `Relationship: ${relationship}`;
             }            
         }
 
