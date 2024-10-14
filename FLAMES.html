@@ -189,9 +189,13 @@
 
             if (type == 1) {
                 visualizeFlamesCountingIndian(remainingCount, 'FLAMES');
+                const debugLog = document.getElementById('debug-logs');
+                debugLog.innerHTML = `<p>Style: </br> </br> Indian </p>`;  
             } else {
                 let flamesCounting = visualizeFlamesCounting(remainingCount);
                 processElement.innerHTML += `<div class="flames-count">${flamesCounting}</div>`;
+                const debugLog = document.getElementById('debug-logs');
+                debugLog.innerHTML = `<p>Style: </br> </br> Global </p>`;  
             }
 
             getRelationship(remainingCount, flamesResult, type);
