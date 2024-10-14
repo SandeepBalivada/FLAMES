@@ -47,6 +47,12 @@
             box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.8);
         }
 
+        .buttons-container {
+            display: flex;
+            justify-content: space-between; /* Space between the buttons */
+            margin: 20px 0; /* Add some margin for spacing */
+        }
+
         .btn {
             background-color: #4caf50;
             color: white;
@@ -54,10 +60,9 @@
             padding: 15px;
             border-radius: 10px;
             font-size: 18px;
-            width: 90%;
+            width: 48%; /* Adjusted width for side-by-side layout */
             cursor: pointer;
             transition: background-color 0.3s ease;
-            margin: 10px 0;
         }
 
         .btn-indian {
@@ -111,8 +116,10 @@
         <input type="text" id="name1" placeholder="Enter Your Name">
         <input type="text" id="name2" placeholder="Enter Partner's Name">
         <h2>Find Out!</h2>
-        <button class="btn btn-indian" onclick="calculateFlames(1)">Indian Style</button>
-        <button class="btn btn-western" onclick="calculateFlames(2)">Global Style</button>
+        <div class="buttons-container">
+            <button class="btn btn-indian" onclick="calculateFlames(1)">Indian Style</button>
+            <button class="btn btn-western" onclick="calculateFlames(2)">Global Style</button>
+        </div>
         <div id="result"></div>
         <div id="calculation-process"></div>
         <div id="debug-logs"></div>
